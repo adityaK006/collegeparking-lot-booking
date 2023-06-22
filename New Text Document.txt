@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>College Parking Lot Booking</title>
+  <style>
+    /* CSS styling for the page */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f3f3f3;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .empty-slots-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #555;
+      background-color: #ffcc00;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .parking-slots-tab,
+    .manage-slots-tab {
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #fff;
+      background-color: #669900;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .parking-slots-tab:hover,
+    .manage-slots-tab:hover {
+      background-color: #4d7c00;
+    }
+    .active {
+      display: block;
+    }
+    .slots-container {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .slot {
+      width: 80px;
+      height: 120px;
+      border-radius: 8px;
+      border: 2px solid #333;
+      background-color: #ddd;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 12px;
+    }
+    .slot.booked {
+      background-color: #ff6666;
+      border-color: #ff6666;
+      color: #fff;
+    }
+    .slot:hover {
+      background-color: #c2c2c2;
+    }
+    .slot.booked:hover {
+      background-color: #ff4d4d;
+      border-color: #ff4d4d;
+    }
+    .slot.selected {
+      background-color: #6699ff;
+      border-color: #6699ff;
+      color: #fff;
+    }
+    .slot.selected:hover {
+      background-color: #4d79ff;
+      border-color: #4d79ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>College Parking Lot Booking</h1>
+  <div class="empty-slots-tab">
+    <span class="empty-slots-count">0</span> Empty Slots
+  </div>
+  <div class="parking-slots-tab" id="parkingSlotsTab" onclick="showManageSlots()">Parking Slots</div>
+  <div class="manage-slots-tab" id="manageSlotsTab" onclick="showParkingSlots()">Go to Home</div>
+  <div class="manage-slots-container" id="manageSlotsContainer">
+    <div class="slots-container">
+      <!-- Slots go here -->
+    </div>
+  </div>
+  <script>
+    // JavaScript code to handle parking lot booking
+    const emptySlotsCountElement = document.querySelector('.empty-slots-count');
+    const parkingSlotsTab = document.getElementById('parkingSlotsTab');
+    const manageSlotsTab = document.getElementById('manageSlotsTab');
+    const manageSlotsContainer = document.getElementById('manageSlotsContainer');
+
+    let emptySlotsCount = 30;
+    const totalSlots = 30;
+    const bookedSlots = [];
+
+    function toggleBooking(slot) {
+      const element = document.getElementById(slot);
+
+      if (element.classList.contains('booked')) {
+        element.classList.remove('booked');
+        const index = bookedSlots.indexOf(slot);
+        if (index > -1) {
+          bookedSlots.splice(index, 1);
+        }
+        emptySlotsCount++;
+      } else {
+        element.classList.add('booked');
+        bookedSlots.push(slot);
+        emptySlotsCount--;
+      }
+
+      element.classList.toggle('selected');
+      updateEmptySlotsCount();
+    }
+
+    function updateEmptySlotsCount() {
+      emptySlotsCountElement.textContent = emptySlotsCount;
+    }
+
+    function showManageSlots() {
+      parkingSlotsTab.style.display = 'none';
+      manageSlotsTab.style.display = 'block';
+      manageSlotsContainer.classList.add('active');
+      document.querySelector('.empty-slots-tab').style.display = 'none';
+      document.querySelector('.slots-container').style.display = 'flex';
+    }
+
+    function showParkingSlots() {
+      parkingSlotsTab.style.display = 'block';
+      manageSlotsTab.style.display = 'none';
+      manageSlotsContainer.classList.remove('active');
+      document.querySelector('.empty-slots-tab').style.display = 'flex';
+      document.querySelector('.slots-container').style.display = 'none';
+    }
+
+    // Create slots dynamically
+    const slotsContainer = document.querySelector('.slots-container');
+    for (let i = 1; i <= totalSlots; i++) {
+      const slot = document.createElement('div');
+      slot.id = 'slot' + i;
+      slot.classList.add('slot');
+      slot.addEventListener('click', function() {
+        toggleBooking(slot.id);
+      });
+      slotsContainer.appendChild(slot);
+    }
+
+    updateEmptySlotsCount();
+  </script>
+</body>
+</html>
